@@ -159,24 +159,34 @@ npm run dev
 ## API Documentation
 
 ### Response Format
-All API responses follow this format:
+All API responses follow a consistent format:
+
+#### Success Response
 ```json
 {
-  "fieldCount": 0,
-  "affectedRows": 1,
-  "insertId": 0,
-  "info": "Rows matched: 1 Changed: 1 Warnings: 1",
-  "serverStatus": 2,
-  "warningStatus": 1,
-  "changedRows": 1
+  "success": true,
+  "message": "Operation completed successfully",
+  "data": { ... },
+  "count": 1  // Only for GET all endpoints
 }
 ```
 
-### Error Handling
-Errors return appropriate HTTP status codes:
-- `400` - Bad Request
-- `404` - Not Found
-- `500` - Internal Server Error
+#### Error Response
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "error": "Detailed error message",
+  "data": null
+}
+```
+
+### HTTP Status Codes
+- `200` - OK (GET, PUT, DELETE successful)
+- `201` - Created (POST successful)
+- `400` - Bad Request (Validation errors)
+- `404` - Not Found (Resource doesn't exist)
+- `500` - Internal Server Error (Database/connection errors)
 
 ## Contributing
 
