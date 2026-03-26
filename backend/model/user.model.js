@@ -1,5 +1,4 @@
-
-const db = require('../database');
+import db from '../database.js';
 
 const User = {
     findAll: () => {
@@ -61,4 +60,4 @@ const User = {
     }
 };
 
-module.exports = User;
+export default User;

@@ -1,8 +1,7 @@
-
-const userModel = require('../model/user.model');
+import userModel from '../model/user.model.js';
 
 // Get all users
-exports.getAllUsers = (req, res) => {
+export const getAllUsers = (req, res) => {
     userModel.findAll()
         .then((users) => {
             res.json({
@@ -22,7 +21,7 @@ exports.getAllUsers = (req, res) => {
 };
 
 // Get user by id
-exports.getUserById = (req, res) => {
+export const getUserById = (req, res) => {
     const id = req.params.id;
     userModel.findById(id)
         .then((user) => {
@@ -49,7 +48,7 @@ exports.getUserById = (req, res) => {
 };
 
 // Create user
-exports.createUser = (req, res) => {
+export const createUser = (req, res) => {
     const { name, email, gender } = req.body;
     
     // Basic validation
@@ -84,7 +83,7 @@ exports.createUser = (req, res) => {
 };
 
 // Update user
-exports.updateUser = (req, res) => {
+export const updateUser = (req, res) => {
     const { name, email, gender } = req.body;
     const id = req.params.id;
     
@@ -127,9 +126,8 @@ exports.updateUser = (req, res) => {
 };
 
 // Delete user
-exports.deleteUser = (req, res) => {
+export const deleteUser = (req, res) => {
     const id = req.params.id;
-    
     userModel.deleteUser(id)
         .then((result) => {
             if (result.affectedRows === 0) {

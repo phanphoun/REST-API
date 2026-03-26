@@ -1,47 +1,88 @@
 const API_URL = 'http://localhost:3000';
 
-export const userAPI = {
-  getAllUsers: async () => {
-    const response = await fetch(`${API_URL}/users`);
-    if (!response.ok) throw new Error('Failed to fetch users');
-    return response.json();
-  },
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
 
-  getUserById: async (id) => {
-    const response = await fetch(`${API_URL}/users/${id}`);
-    if (!response.ok) throw new Error('Failed to fetch user');
-    return response.json();
-  },
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
 
-  createUser: async (userData) => {
-    const response = await fetch(`${API_URL}/users`, {
+const parseResponse = async (response, fallbackMessage) => {
+  const payload = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(payload?.message || payload?.error || fallbackMessage);
+  }
+
+  return payload;
+};
+
+export const authAPI = {
+  register: async (userData) => {
+    const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(userData),
     });
-    if (!response.ok) throw new Error('Failed to create user');
-    return response.json();
+
+    return parseResponse(response, 'Failed to register');
+  },
+
+  login: async (credentials) => {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    return parseResponse(response, 'Failed to login');
+  },
+};
+
+export const userAPI = {
+  getAllUsers: async () => {
+    const response = await fetch(`${API_URL}/users`, {
+      headers: getAuthHeaders(),
+    });
+    return parseResponse(response, 'Failed to fetch users');
+  },
+
+  getUserById: async (id) => {
+    const response = await fetch(`${API_URL}/users/${id}`, {
+      headers: getAuthHeaders(),
+    });
+    return parseResponse(response, 'Failed to fetch user');
+  },
+
+  createUser: async (userData) => {
+    const response = await fetch(`${API_URL}/users`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(userData),
+    });
+    return parseResponse(response, 'Failed to create user');
   },
 
   updateUser: async (id, userData) => {
     const response = await fetch(`${API_URL}/users/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(userData),
     });
-    if (!response.ok) throw new Error('Failed to update user');
-    return response.json();
+    return parseResponse(response, 'Failed to update user');
   },
 
   deleteUser: async (id) => {
     const response = await fetch(`${API_URL}/users/${id}`, {
       method: 'DELETE',
+      headers: getAuthHeaders(),
     });
-    if (!response.ok) throw new Error('Failed to delete user');
-    return response.json();
+    return parseResponse(response, 'Failed to delete user');
   },
 };

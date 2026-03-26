@@ -1,0 +1,8 @@
+$kind: collection
+name: REST-API
+description: 'A complete REST API for user management with authentication. Base URL: http://localhost:3000. All responses follow the format: { success, message, data, count? }'
+variables:
+  - key: baseUrl
+    value: 'http://localhost:3000'
+  - key: userId
+    value: '1'

@@ -1,11 +1,14 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
 // Routes
-const userRoutes = require('./routes/user.routes');
+import userRoutes from './routes/user.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 // Enable CORS for frontend
 app.use(cors({
@@ -20,12 +23,17 @@ app.use(express.urlencoded({ extended: true }));
 
 // Use routes
 app.use('/users', userRoutes);
+app.use('/auth', authRoutes);
 
 // Home route
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send(
+    'Welcome to the API'
+  )
 });
 
 app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port: http://localhost:${process.env.PORT}`);
+  
+  console.log(`App listening on port: http://localhost:${process.env.PORT}`);
+
 });
