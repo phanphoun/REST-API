@@ -1,39 +1,22 @@
 import express from 'express';
 import cors from 'cors';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
 const app = express();
 
-// Routes
-import userRoutes from './routes/user.routes.js';
-import authRoutes from './routes/auth.routes.js';
-
-// Enable CORS for frontend
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3001'],
-  credentials: true
-}));
-
-// Middleware to parse JSON bodies
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('MongoDB connected'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
-// Use routes
-app.use('/users', userRoutes);
-app.use('/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
-// Home route
-app.get('/', (req, res) => {
-  res.send(
-    'Welcome to the API'
-  )
-});
-
-app.listen(process.env.PORT, () => {
-  
-  console.log(`App listening on port: http://localhost:${process.env.PORT}`);
-
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
 });

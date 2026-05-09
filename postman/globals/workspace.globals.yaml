@@ -1,4 +1,0 @@
-name: Globals
-values:
-  - key: accessToken
-    value: ''
